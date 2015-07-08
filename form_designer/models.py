@@ -13,12 +13,7 @@ from django.core.exceptions import ImproperlyConfigured
 from form_designer.fields import TemplateTextField, TemplateCharField, ModelNameField, RegexpExpressionField
 from form_designer.utils import get_class
 from form_designer import settings
-
-if settings.VALUE_PICKLEFIELD:
-    try:
-        from picklefield.fields import PickledObjectField
-    except ImportError:
-        raise ImproperlyConfigured('FORM_DESIGNER_VALUE_PICKLEFIELD is True, but django-picklefield is not installed.')
+from picklefield.fields import PickledObjectField
 
 
 class FormValueDict(dict):
@@ -168,7 +163,7 @@ class FormDefinition(models.Model):
     @property
     def submit_flag_name(self):
         name = settings.SUBMIT_FLAG_NAME % self.name
-        # make sure we are not overriding one of the actual form fields 
+        # make sure we are not overriding one of the actual form fields
         while self.formdefinitionfield_set.filter(name__exact=name).count() > 0:
             name += '_'
         return name
@@ -217,7 +212,7 @@ class FormDefinitionField(models.Model):
     def ____init__(self, field_class=None, name=None, required=None, widget=None, label=None, initial=None, help_text=None, *args, **kwargs):
         super(FormDefinitionField, self).__init__(*args, **kwargs)
         self.name = name
-        self.field_class = field_class  
+        self.field_class = field_class
         self.required = required
         self.widget = widget
         self.label = label
@@ -303,7 +298,7 @@ class FormLog(models.Model):
 
     def __unicode__(self):
         return "%s (%s)" % (self.form_definition.title or  \
-            self.form_definition.name, self.created) 
+            self.form_definition.name, self.created)
 
     def get_data(self):
         if self._data:
@@ -349,7 +344,7 @@ class FormLog(models.Model):
 
     def save(self, *args, **kwargs):
         super(FormLog, self).save(*args, **kwargs)
-        if self._data: 
+        if self._data:
             # safe form data and then clear temporary variable
             for value in self.values.all():
                 value.delete()
@@ -364,15 +359,7 @@ class FormLog(models.Model):
 class FormValue(models.Model):
     form_log = models.ForeignKey(FormLog, related_name='values')
     field_name = models.SlugField(_('field name'), max_length=255)
-    if settings.VALUE_PICKLEFIELD:
-        # use PickledObjectField if available because it preserves the
-        # original data type
-        value = PickledObjectField(_('value'), null=True, blank=True)
-    else:
-        # otherwise just use a TextField, with the drawback that
-        # all values will just be stored as unicode strings, 
-        # but you can easily query the database for form results.
-        value = models.TextField(_('value'), null=True, blank=True)
+    value = PickledObjectField(_('value'), null=True, blank=True)
 
     def __unicode__(self):
         return u'%s = %s' % (self.field_name, self.value)
