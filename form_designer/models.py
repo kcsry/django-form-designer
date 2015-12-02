@@ -7,13 +7,17 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.forms import widgets
 from django.core.mail import send_mail
 from django.conf import settings as django_settings
-from django.utils.datastructures import SortedDict
 from django.core.exceptions import ImproperlyConfigured
 
 from form_designer.fields import TemplateTextField, TemplateCharField, ModelNameField, RegexpExpressionField
 from form_designer.utils import get_class
 from form_designer import settings
 from picklefield.fields import PickledObjectField
+
+try:
+    from django.utils.datastructures import SortedDict
+except ImportError:
+    from collections import OrderedDict as SortedDict
 
 
 class FormValueDict(dict):
