@@ -5,7 +5,10 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from form_designer import settings as app_settings
 from django.contrib import messages
-from django.core.context_processors import csrf
+try:
+    from django.template.context_processors import csrf
+except ImportError:
+    from django.core.context_processors import csrf
 
 import os
 import random
@@ -14,7 +17,7 @@ from datetime import datetime
 from form_designer.forms import DesignedForm
 from form_designer.models import FormDefinition, FormLog
 from form_designer.uploads import handle_uploaded_files
-from form_designer.signals import (designedform_submit, designedform_success, 
+from form_designer.signals import (designedform_submit, designedform_success,
                                 designedform_error, designedform_render)
 
 
@@ -79,11 +82,11 @@ def process_form(request, form_definition, extra_context={}, disable_redirection
         'form_definition': form_definition
     })
     context.update(csrf(request))
-    
+
     if form_definition.display_logged:
         logs = form_definition.logs.all().order_by('created')
         context.update({'logs': logs})
-        
+
     return context
 
 def _form_detail_view(request, form_definition):
@@ -98,8 +101,8 @@ def _form_detail_view(request, form_definition):
 
 def detail(request, object_name):
     form_definition = get_object_or_404(FormDefinition, name=object_name, require_hash=False)
-    return _form_detail_view(request, form_definition) 
+    return _form_detail_view(request, form_definition)
 
 def detail_by_hash(request, public_hash):
     form_definition = get_object_or_404(FormDefinition, public_hash=public_hash)
-    return _form_detail_view(request, form_definition) 
+    return _form_detail_view(request, form_definition)
