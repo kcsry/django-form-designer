@@ -57,9 +57,11 @@ filterwarnings = [
 
 [tool.ruff]
 exclude = ["migrations", "node_modules", ".tox"]
-ignore = []
 line-length = 120
+
+[tool.ruff.lint]
+ignore = []
 select = ["C9", "E", "F", "W", "I"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 10
