@@ -19,6 +19,9 @@ ROOT_URLCONF = "dfd_tests.urls"
 SITE_ID = 1
 FORMS_URLFIELD_ASSUME_HTTPS = True  # added in 5.0, deprecated in 6.0
 
+# Don't spend time on slow password hashing in tests
+PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
