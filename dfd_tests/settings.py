@@ -17,6 +17,7 @@ MEDIA_ROOT = gettempdir()
 WSGI_APPLICATION = "dfd_tests.wsgi.application"
 ROOT_URLCONF = "dfd_tests.urls"
 SITE_ID = 1
+FORMS_URLFIELD_ASSUME_HTTPS = True  # added in 5.0, deprecated in 6.0
 
 INSTALLED_APPS = [
     "django.contrib.admin",

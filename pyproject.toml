@@ -51,7 +51,8 @@ filterwarnings = [
   "ignore:.+default_app_config.+",
   "once::DeprecationWarning",
   "once::PendingDeprecationWarning",
-  "ignore:.+PickledObjectField.from_db_value.+"
+  "ignore:.+PickledObjectField.from_db_value.+",
+  "ignore:.+FORMS_URLFIELD_ASSUME_HTTPS.+",
 ]
 
 [tool.ruff]
