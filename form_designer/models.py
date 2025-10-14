@@ -195,9 +195,13 @@ class FormDefinition(models.Model):
     def get_absolute_url(self):
         if self.require_hash:
             return reverse(
-                "form_designer.views.detail_by_hash", [str(self.public_hash)]
+                "form_designer_detail_by_hash",
+                kwargs={"public_hash": str(self.public_hash)},
             )
-        return reverse("form_designer.views.detail", [str(self.name)])
+        return reverse(
+            "form_designer_detail",
+            kwargs={"object_name": str(self.name)},
+        )
 
     def get_form_data(self, form):
         # TODO: refactor, move to utils or views

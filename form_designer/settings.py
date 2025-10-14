@@ -1,7 +1,6 @@
 import os.path
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 STATIC_URL = os.path.join(

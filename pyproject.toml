@@ -7,7 +7,7 @@ name = "django-form-designer-kcs"
 dynamic = ["version"]
 readme = "README.rst"
 license = "BSD-3-Clause"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Framework :: Django",
@@ -18,7 +18,7 @@ classifiers = [
   "Topic :: Internet :: WWW/HTTP",
 ]
 dependencies = [
-  "django>=4.0",
+  "django>=5.2",
   "django-picklefield",
 ]
 
@@ -40,7 +40,7 @@ path = "form_designer/__init__.py"
 include = ["/form_designer"]
 
 [tool.pytest.ini_options]
-django_settings_module = "dfd_tests.settings"
+DJANGO_SETTINGS_MODULE = "dfd_tests.settings"
 norecursedirs = ["bower_components", "node_modules", ".git", "venv*"]
 doctest_optionflags = [
   "NORMALIZE_WHITESPACE",
@@ -51,14 +51,17 @@ filterwarnings = [
   "ignore:.+default_app_config.+",
   "once::DeprecationWarning",
   "once::PendingDeprecationWarning",
-  "ignore:.+PickledObjectField.from_db_value.+"
+  "ignore:.+PickledObjectField.from_db_value.+",
+  "ignore:.+FORMS_URLFIELD_ASSUME_HTTPS.+",
 ]
 
 [tool.ruff]
 exclude = ["migrations", "node_modules", ".tox"]
-ignore = []
 line-length = 120
+
+[tool.ruff.lint]
+ignore = []
 select = ["C9", "E", "F", "W", "I"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 10
