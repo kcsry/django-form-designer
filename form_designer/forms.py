@@ -1,7 +1,4 @@
-import os
-
 from django import forms
-from django.conf import settings as django_settings
 from django.forms import widgets
 from django.forms.widgets import Select
 from django.utils.module_loading import import_string
@@ -91,24 +88,16 @@ class FormDefinitionForm(forms.ModelForm):
         model = FormDefinition
         exclude = ()
 
-    def _media(self):
-        js = []
-        plugins = [
-            "js/jquery-ui.js",
-            "js/jquery-inline-positioning.js",
-            "js/jquery-inline-rename.js",
-            "js/jquery-inline-collapsible.js",
-            "js/jquery-inline-fieldset-collapsible.js",
-            "js/jquery-inline-prepopulate-label.js",
-        ]
-        if hasattr(django_settings, "JQUERY_URL"):
-            js.append(django_settings.JQUERY_URL)
-        else:
-            plugins = ["js/jquery.js"] + plugins
-        js.extend([os.path.join(settings.STATIC_URL, path) for path in plugins])
-        return forms.Media(js=js)
-
-    media = property(_media)
+    class Media:
+        # jQuery itself is provided by the Django admin (as django.jQuery);
+        # this script builds on it and reimplements the drag-and-drop
+        # reordering that used to depend on jQuery UI. Listing jquery.init.js
+        # (deduplicated against the admin's own copy) ensures django.jQuery is
+        # defined before our script loads.
+        js = (
+            "admin/js/jquery.init.js",
+            "form_designer/js/form_designer_admin.js",
+        )
 
     def __init__(self, data=None, files=None, **kwargs):
         super().__init__(data=data, files=files, **kwargs)
