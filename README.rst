@@ -50,16 +50,13 @@ Basic setup
     )
 
 
-Optional requirements
-=====================
+Admin interface
+===============
 
-The form_designer admin interface requires jQuery and the jQuery UI Sortable
-plugin to make building forms a lot more user-friendly. The two Javascript
-files are bundled with form_designer. If you want to use you own jquery.js
-instead because you're already including it anyway, define JQUERY\_JS in your
-settings file. For instance::
-
-    JQUERY_JS = 'jquery/jquery-latest.js'
+The form_designer admin interface adds drag-and-drop reordering and
+collapsible fieldsets to make building forms a lot more user-friendly. This
+builds on the jQuery that the Django admin already ships (``django.jQuery``),
+so there is nothing extra to configure.
 
 Running tests
 =============
