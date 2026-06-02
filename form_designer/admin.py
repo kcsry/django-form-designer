@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 from django.http import Http404
 from django.urls import re_path, reverse
 from django.utils.module_loading import import_string
@@ -86,12 +87,31 @@ class FormDefinitionAdmin(admin.ModelAdmin):
     ]
     search_fields = ("name", "title")
 
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(_count_fields=Count("formdefinitionfield"))
+        )
+
+    @admin.display(description=_("Fields"), ordering="_count_fields")
+    def count_fields(self, obj):
+        return obj._count_fields
+
 
 class FormLogAdmin(admin.ModelAdmin):
     list_display = ("form_definition", "created", "id", "created_by", "data_html")
     list_filter = ("form_definition",)
+    list_select_related = ("form_definition", "created_by")
     list_display_links = None
     date_hierarchy = "created"
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .prefetch_related("values", "form_definition__formdefinitionfield_set")
+        )
 
     exporter_classes = {}
     exporter_classes_ordered = []
