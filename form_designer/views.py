@@ -157,7 +157,12 @@ def process_form(  # noqa: C901
     update_recaptcha_context(context)
 
     if form_definition.display_logged:
-        logs = form_definition.logs.all().order_by("created")
+        logs = (
+            form_definition.logs.all()
+            .select_related("form_definition")
+            .prefetch_related("values", "form_definition__formdefinitionfield_set")
+            .order_by("created")
+        )
         context.update({"logs": logs})
 
     return context
